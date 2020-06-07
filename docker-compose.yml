@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12.2-alpine
+    volumes:
+      - "${PWD}/db/scripts:/tmp/scripts"
+      - "${PWD}/db/data:/var/lib/postgresql/data"
+
+  drill:
+    image: apache/drill:latest
+    volumes:
+      - "${PWD}/drill/data:/tmp/data"
+      - "${PWD}/drill/scripts:/tmp/scripts"
+
+  spark:
+    build: ./spark

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+
+cd $ROOTDIR
+
+release="spark-2.4.5-bin-hadoop2.7"
+archive="$release.tgz"
+
+if [ ! -f $archive ]; then
+    printf "\n[*] Downloading spark archive file\n\n"
+    curl -O https://downloads.apache.org/spark/spark-2.4.5/$archive
+fi
+
+printf "\n[*] Installing spark version 2.4.5\n\n"
+tar -xvf $archive
+mv $release /opt/spark
