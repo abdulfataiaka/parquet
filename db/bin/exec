@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+source $ROOTDIR/bin/support
+
+script="$1"
+
+psql -U $dbuser -d $dbname -f /tmp/scripts/$script.sql

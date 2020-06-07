@@ -1,0 +1,22 @@
+#!/bin/bash
+
+###=== NOTE: Script runs outside of drill container ===#
+
+ROOTDIR="$(dirname $(dirname $(cd $(dirname $0) && pwd)))"
+cd $ROOTDIR
+source db/bin/support
+
+itbnames="${*:1}"
+
+if [ "$itbnames" == "--all" ]; then
+  itbnames=$tbnames
+fi
+
+if [ "$itbnames" == "" ]; then
+  printf "\n[*] No table has been specified for import\n\n"
+  exit
+fi
+
+printf "\n[*] Importing tables as parquet files\n\n"
+docker-compose run --rm spark bin/convert ${itbnames[*]}
+echo

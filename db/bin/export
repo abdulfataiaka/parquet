@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+source $ROOTDIR/bin/support
+
+itbnames="${*:1}"
+
+if [ "$itbnames" == "--all" ]; then
+  itbnames=$tbnames
+fi
+
+if [ "$itbnames" == "" ]; then
+  printf "\n[*] No table has been specified for export\n\n"
+  exit
+fi
+
+for tbname in ${itbnames[@]}
+do
+  printf "\n[*] Exporting Table: $tbname\n"
+  
+  psql -U postgres \
+    -d $dbname \
+    -c "COPY $tbname TO '/tmp/exports/$tbname.csv' WITH CSV HEADER"
+  
+  echo
+done

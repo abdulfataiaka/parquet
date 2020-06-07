@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+source $ROOTDIR/bin/support
+
+schema="/tmp/scripts/$dbname.schema.sql"
+
+if [ ! -f $schema ]; then
+  printf "\n[*] Could not find schema: $schema\n\n"
+  exit
+fi
+
+dropdb -U postgres --if-exists $dbname
+createdb -U postgres $dbname
+psql -U postgres -d $dbname -f $schema

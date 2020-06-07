@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+source $ROOTDIR/bin/support
+
+role="$1"
+
+createuser -U postgres \
+  -g $dbuser \
+  --inherit \
+  --superuser $role

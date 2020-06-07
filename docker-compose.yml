@@ -1,10 +1,22 @@
 version: '3.7'
 
 services:
+  spark:
+    build: ./spark
+    volumes:
+      - "${PWD}/db/exports:/tmp/exports"
+      - "${PWD}/drill/data:/tmp/imports"
+
   db:
     image: postgres:12.2-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
     volumes:
+      - "${PWD}/db/bin:/tmp/bin"
       - "${PWD}/db/scripts:/tmp/scripts"
+      - "${PWD}/db/exports:/tmp/exports"
       - "${PWD}/db/data:/var/lib/postgresql/data"
 
   drill:
@@ -12,6 +24,3 @@ services:
     volumes:
       - "${PWD}/drill/data:/tmp/data"
       - "${PWD}/drill/scripts:/tmp/scripts"
-
-  spark:
-    build: ./spark

@@ -5,7 +5,7 @@ rootdir = sys.argv[1]
 names = sys.argv[2:]
 
 print(f"\n[*] Rootdir: {rootdir}")
-print(f"\n[*] Names:")
+print(f"\n[*] Names: {'<Empty>' if not len(names) else ''}")
 for name in names:
   print(f"     * {name}")
 print("")

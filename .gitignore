@@ -1,2 +1,22 @@
+# [-- misc --]
+.vscode
+.DS_Store
+
 # [-- spark --]
 spark/*.tgz
+
+# [-- db --]
+db/data
+db/exports
+db/scripts/**/*
+!db/scripts/test.sql
+!db/scripts/testdb.dump.sql
+!db/scripts/testdb.schema.sql
+
+# [-- drill --]
+drill/data
+# drill/scripts/**/*
+# !db/scripts/test.sql
+# !db/scripts/testdb.dump.sql
+# !db/scripts/testdb.schema.sql
+

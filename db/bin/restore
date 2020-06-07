@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+source $ROOTDIR/bin/support
+
+pg_restore \
+  --clean \
+  --verbose \
+  --username=postgres \
+  --dbname=$dbname \
+  /tmp/scripts/$dbname.dump.sql
