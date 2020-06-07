@@ -17,6 +17,5 @@ if [ "$tbnames" == "" ]; then
   exit
 fi
 
-printf "\n[*] Importing tables as parquet files\n"
 docker-compose run --rm spark bin/convert ${tbnames[*]}
 echo
