@@ -6,17 +6,17 @@ ROOTDIR="$(dirname $(dirname $(cd $(dirname $0) && pwd)))"
 cd $ROOTDIR
 source db/bin/support
 
-itbnames="${*:1}"
+tbnames="${*:1}"
 
-if [ "$itbnames" == "--all" ]; then
-  itbnames=$tbnames
+if [ "$tbnames" == "--all" ]; then
+  tbnames=$tables
 fi
 
-if [ "$itbnames" == "" ]; then
+if [ "$tbnames" == "" ]; then
   printf "\n[*] No table has been specified for import\n\n"
   exit
 fi
 
-printf "\n[*] Importing tables as parquet files\n\n"
-docker-compose run --rm spark bin/convert ${itbnames[*]}
+printf "\n[*] Importing tables as parquet files\n"
+docker-compose run --rm spark bin/convert ${tbnames[*]}
 echo

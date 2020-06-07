@@ -1,13 +1,12 @@
 import sys
-# from csv_to_parquet import CsvToParquet
 
-rootdir = sys.argv[1]
-names = sys.argv[2:]
+srcdir = '/tmp/exports'
+destdir = '/tmp/imports'
+tbnames = sys.argv[1:]
 
-print(f"\n[*] Rootdir: {rootdir}")
-print(f"\n[*] Names: {'<Empty>' if not len(names) else ''}")
-for name in names:
-  print(f"     * {name}")
+print(f"\n[*] Table names: {'<Empty>' if not len(tbnames) else ''}")
+for tbname in tbnames:
+  print(f"     * {tbname}")
 print("")
 
-# CsvToParquet.call(names, rootdir)
+print("Start actual conversions")

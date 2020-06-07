@@ -15,8 +15,5 @@ db/scripts/**/*
 
 # [-- drill --]
 drill/data
-# drill/scripts/**/*
-# !db/scripts/test.sql
-# !db/scripts/testdb.dump.sql
-# !db/scripts/testdb.schema.sql
-
+drill/scripts/**/*
+!drill/scripts/test.sql

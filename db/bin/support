@@ -3,6 +3,6 @@
 dbname="testdb"
 dbuser="postgres"
 
-tbnames=(
+tables=(
   users
 )
