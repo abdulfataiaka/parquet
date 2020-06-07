@@ -20,7 +20,7 @@ services:
       - "${PWD}/db/data:/var/lib/postgresql/data"
 
   drill:
-    image: apache/drill:latest
+    image: apache/drill:latest    
     volumes:
       - "${PWD}/drill/data:/tmp/data"
       - "${PWD}/drill/scripts:/tmp/scripts"

@@ -1,1 +1,1 @@
-SELECT * dfs.tmp.`data/users.parquet`;
+SELECT * FROM dfs.tmp.`data/users.parquet`;
