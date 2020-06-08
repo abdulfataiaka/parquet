@@ -20,7 +20,8 @@ services:
       - "${PWD}/db/data:/var/lib/postgresql/data"
 
   drill:
-    image: apache/drill:latest    
+    image: apache/drill:latest
     volumes:
       - "${PWD}/drill/data:/tmp/data"
       - "${PWD}/drill/scripts:/tmp/scripts"
+      - "${PWD}/drill/storage-plugins.conf:/opt/drill/conf/storage-plugins-override.conf"

@@ -9,6 +9,7 @@ spark/*.tgz
 db/data
 db/exports
 db/scripts/**/*
+db/bin/config
 !db/scripts/test.sql
 !db/scripts/testdb.dump.sql
 !db/scripts/testdb.schema.sql

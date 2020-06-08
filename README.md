@@ -26,24 +26,36 @@ This will ensure that the release archive file is not downloaded on every build
 
 ## Folder Structure
  
+- `bin/` : Bash script for interacting with services
 - `db/` : PostgreSQL server container directory
 - `drill/` : Apache Drillbit container directory 
 - `spark/` : Apache spark container directory
-- `bin/` : Bash script for interacting with services
 
-## Build image for all services
-
+## Pull and build images for all services
+ 
 ```bash
 
-$ docker-compose build
+$ docker-compose up
+
+$ docker-compose down # stop containers for now
 
 ```
 
 ## PostgreSQL Server Service
 
-The project setup assumes you will only be interacting with a single database through out the period of usage, so we have a config file at `db/bin/config` that holds database information. So check that out to be sure of which database you are dealing with at any time. Also ensure the config file only contains details about a single database at any time.
+The project setup assumes you will only be interacting with a single database through out the period of usage, so we have a config file at `db/bin/config` (Ensure to have copied `db/bin/config.example` to `db/bin/config`) that holds database information.
 
-Also, any command to be executed against the server will require it to have been started first with `$ make db`. So after ensuring the above, you can do the following ...
+So check that out to be sure of which database you are dealing with at any time. Also ensure the config file only contains details about a single database at any time.
+
+Any command to be executed against the server will require the server to already be running
+
+0. Start up the PostgreSQL database service
+
+```bash
+
+$ docker-compose up db
+
+```
 
 1. Create the set database. This assumes the existence of a file at `db/scripts/{dbname}.schema.sql`
 
@@ -111,14 +123,35 @@ $ bin/drill-shell
 
 ```bash
 
-# USE: {tbname} => test
-apache drill> !run /tmp/scripts/{tbname}.sql
+# USE: {script} => test
+apache drill> !run /tmp/scripts/{script}.sql
 
 ```
 
+4. Exiting the drill shell
+
+```bash
+
+apache drill> !quit
+
+```
+
+## Checking performace based on query execution time
+
+After executing any SQL script against the PostgreSQL database, the time of execution is seen after the query result. Note that time is in milliseconds
+
+However, to check the execution time of SQL scripts for Apache Drillbit, you will need to do the following
+
+- Visit the profiles page on the Web UI at `http://127.0.0.1:8047/profiles`
+- You should see a listing of all executed query
+- Click on the query you are interested in
+- See durations under `Query Profile` section. You are interested in the value under `Execution` column
+
+Note that time is in seconds and not milliseconds.
+
 ## Creating and adding custom SQL scripts
 
-Create SQL scripts that references the set PostgreSQL database tables, dump these scripts into `db/scripts` and then execute them using the `bin/db exec` command as seen above. You can also create SQL scripts that references the Drillbit parquet files, dump these scripts into `drill/scripts` and then execute them using the `!run` command in drill shell as seen above. 
+Create SQL scripts that references the set PostgreSQL database tables, dump these scripts into `db/scripts` and then execute them using the `bin/db exec` command as seen above. You can also create SQL scripts that references the Drillbit parquet files, dump these scripts into `drill/scripts` and then execute them using the `!run` command in drill shell as seen above.
 
 ## Author
 

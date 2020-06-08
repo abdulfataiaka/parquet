@@ -6,4 +6,4 @@ source $ROOTDIR/bin/config
 
 script="$1"
 
-psql -U $dbuser -d $dbname -f /tmp/scripts/$script.sql
+psql -U $dbuser -d $dbname -c "\timing" -f /tmp/scripts/$script.sql
