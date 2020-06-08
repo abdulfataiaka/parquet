@@ -1,10 +1,8 @@
 #!/bin/bash
 
-###=== NOTE: Script runs outside of drill container ===#
-
-ROOTDIR="$(dirname $(dirname $(cd $(dirname $0) && pwd)))"
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
 cd $ROOTDIR
-source db/bin/support
+source db/bin/config
 
 tbnames="${*:1}"
 
@@ -17,5 +15,5 @@ if [ "$tbnames" == "" ]; then
   exit
 fi
 
-docker-compose run --rm spark bin/convert ${tbnames[*]}
+bin/spark bin/convert ${tbnames[*]}
 echo

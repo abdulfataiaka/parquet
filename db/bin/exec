@@ -2,7 +2,7 @@
 
 
 ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
-source $ROOTDIR/bin/support
+source $ROOTDIR/bin/config
 
 script="$1"
 

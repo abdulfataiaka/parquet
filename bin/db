@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
+
+cd $ROOTDIR
+
+script="$1"
+arguments="${*:2}"
+
+docker-compose exec db /tmp/bin/$script $arguments
