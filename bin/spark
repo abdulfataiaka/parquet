@@ -1,7 +1,0 @@
-#!/bin/bash
-
-ROOTDIR="$(dirname $(cd $(dirname $0) && pwd))"
-
-cd $ROOTDIR
-
-docker-compose run --rm spark $*

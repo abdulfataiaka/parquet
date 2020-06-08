@@ -15,5 +15,5 @@ if [ "$tbnames" == "" ]; then
   exit
 fi
 
-bin/spark bin/convert ${tbnames[*]}
+docker-compose run --rm spark bin/convert ${tbnames[*]}
 echo

@@ -20,24 +20,16 @@ The spark image usually downloads the 2.4.5 release during build, which is about
 
 This will ensure that the release archive file is not downloaded on every build
 
-## Workflow
+## Prerequisites
 
-- Create a database in the PostgreSQL database server
-- Restore step below might need some roles to be available, create them.
-- Restore the new database with some existing records dump file
-- Export database tables as CSV for conversion to parquet files later
-- Convert CSV exports to parquet files to collectively serve as a drillbit datastore
-- Run queries against PostgreSQL database and also against drillbit datastore and benchmark performance
+- Bash
 
-In below sections, we show you how to do some basic setup to start running queries. As we do this, note the mentioned directory paths as that will enable you understand how to work with this projects setup.
-
-## General Notes
-
-Only the `db` service should run using docker-compose up, as others are for oneoff uses.
-
-While going through the below instructions, the default values set in `db/bin/support` file will relied on by scripts.
-
-The project setup assumes you will only be interacting with a single database through out the period of usage
+## Folder Structure
+ 
+- `db/` : PostgreSQL server container directory
+- `drill/` : Apache Drillbit container directory 
+- `spark/` : Apache spark container directory
+- `bin/` : Bash script for interacting with services
 
 ## Build image for all services
 
@@ -47,89 +39,75 @@ $ docker-compose build
 
 ```
 
-## Start up PostgreSQL server
+## PostgreSQL Server Service
+
+The project setup assumes you will only be interacting with a single database through out the period of usage, so we have a config file at `db/bin/config` that holds database information. So check that out to be sure of which database you are dealing with at any time. Also ensure the config file only contains details about a single database at any time.
+
+Also, any command to be executed against the server will require it to have been started first with `$ make db`. So after ensuring the above, you can do the following ...
+
+1. Create the set database. This assumes the existence of a file at `db/scripts/{dbname}.schema.sql`
 
 ```bash
 
-$ docker-compose up db
+$ bin/db create
 
 ```
 
-## Create a PostgreSQL database
-
-This will expect to find an sql file at `db/scripts/{dbname}.schema.sql`
-
-```bash
-
-$ docker-compose exec db /tmp/bin/create
-
-```
-
-## Restore data into a PostgreSQL database
-
-This is to ensure that we have data as necessary for checking out performance of the different queries we will be running later
-
-This will expect to find an sql file at `db/scripts/{dbname}.dump.sql`
+2. Restore data into the set database. This is to ensure that we have data in the database. This also assumes the existence of a file at `db/scripts/{dbname}.dump.sql`
 
 ```bash
 
 # Assuming you need some custom role for restore, you can also create it as seen below
-#      $ docker-compose exec db /tmp/bin/role {name}
+#    $ docker-compose exec db /tmp/bin/role {name}
 
-$ docker-compose exec db /tmp/bin/restore
+$ bin/db restore
 
 ```
 
-## Executing queries against a PostgreSQL database
-
-This expects script to be executed be stored at `db/scripts` directory. Script names in command should not have the `.sql` extension.
+3. Executing queries against the set database. This expects scripts be stored at `db/scripts` directory. Script names in command should not have the `.sql` extension.
 
 ```bash
 
 # USE: {script} => test
-$ docker-compose exec db /tmp/bin/exec {script}
+$ bin/db exec {script}
 
 ```
 
-## Exporting PostgreSQL database tables as CSV
-
-These CSV exports are used to create corresponding parquet files to be used in Apache Drill. You can export all tables specified in `db/bin/support` or pass table names to the export script as seen below. The CSV exports are dumped in the directory `db/exports`
+4. Exporting the set database tables as CSV files. You can export all set tables or pass table names to the export script as seen below. The CSV exports are dumped in the directory `db/exports`
 
 ```bash
 
 # USE: {tbname} => users
-$ docker-compose exec db /tmp/bin/export {tbname}
+$ bin/db export {tbname}
 
-$ docker-compose exec db /tmp/bin/export --all
+$ bin/db export --all
 
 ```
 
-## Importing CSV exports into Apache Drill as parquet files
+## Apache Drillbit Service
 
-This exercise runs outside of docker container as it focuses on adding files to the project directory. It uses the spark service under the hood for this conversions. The imported files are dumped in `drill/data`. Similar to PostgreSQL export script, the import script can import all tables or passed table names.
+This is a service that provides us with a Drillbit server that can read parquet files and run SQL queries against them. We can do the following ...
+
+1. Importing PostgreSQL CSV exports into Apache Drill as parquet files. Note that it uses the spark service under the hood for this conversions. The imported files are dumped in `drill/data`. You can import for all PostgreSQL database set tables or pass table names to the import script
 
 ```bash
 
 # USE: {tbname} => users
-$ drill/bin/import {tbname}
+$ bin/drill-import {tbname}
 
-$ drill/bin/import --all
+$ bin/drill-import --all
 
 ```
 
-## Starting the drill shell
-
-This involves starting up a drilbit server in order to execute our drillbit compatible SQL scripts located at `drill/scripts`
+2. Starting the drill shell. This will start a Drilbit server and open a drill shell - [SQLLine](http://sqlline.sourceforge.net/)
 
 ```bash
 
-$ drill/bin/shell
+$ bin/drill-shell
 
 ```
 
-## Running a drillbit SQL scripts
-
-Assuming you have the drill shell open, these queries will reference parquet files in `drill/data`
+3. Running SQL scripts in drill shell. These SQL scripts will reference exisiting parquet files in `drill/data`
 
 ```bash
 
@@ -137,6 +115,10 @@ Assuming you have the drill shell open, these queries will reference parquet fil
 apache drill> !run /tmp/scripts/{tbname}.sql
 
 ```
+
+## Creating and adding custom SQL scripts
+
+Create SQL scripts that references the set PostgreSQL database tables, dump these scripts into `db/scripts` and then execute them using the `bin/db exec` command as seen above. You can also create SQL scripts that references the Drillbit parquet files, dump these scripts into `drill/scripts` and then execute them using the `!run` command in drill shell as seen above. 
 
 ## Author
 
