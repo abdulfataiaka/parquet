@@ -6,7 +6,7 @@ source $ROOTDIR/bin/config
 tbnames="${*:1}"
 
 if [ "$tbnames" == "--all" ]; then
-  tbnames=$tables
+  tbnames=${tables[@]}
 fi
 
 if [ "$tbnames" == "" ]; then
@@ -20,7 +20,7 @@ do
   
   psql -U postgres \
     -d $dbname \
-    -c "COPY $tbname TO '/tmp/exports/$tbname.csv' WITH CSV HEADER"
-  
+    -c "COPY $tbname TO '/tmp/exports/$tbname.csv' WITH CSV HEADER QUOTE '\"' DELIMITER ','"
+
   echo
 done

@@ -43,7 +43,7 @@ $ docker-compose down # stop containers for now
 
 ## PostgreSQL Server Service
 
-The project setup assumes you will only be interacting with a single database through out the period of usage, so we have a config file at `db/bin/config` (Ensure to have copied `db/bin/config.example` to `db/bin/config`) that holds database information.
+The project setup assumes you will only be interacting with a single database through out the period of usage, so we have a config file at `db/bin/config` (Ensure to have copied `db/bin/config.test` to `db/bin/config`) that holds database your own db information.
 
 So check that out to be sure of which database you are dealing with at any time. Also ensure the config file only contains details about a single database at any time.
 

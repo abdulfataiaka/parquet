@@ -7,7 +7,7 @@ source db/bin/config
 tbnames="${*:1}"
 
 if [ "$tbnames" == "--all" ]; then
-  tbnames=$tables
+  tbnames=${tables[@]}
 fi
 
 if [ "$tbnames" == "" ]; then
