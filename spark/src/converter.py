@@ -19,6 +19,7 @@ class Converter:
       schema=schema,
       header=True,
       quote='"',
+      escape='"',
       sep=',',
       multiLine=True
     )

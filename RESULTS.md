@@ -23,4 +23,4 @@ Table: `documents`
 Table: `document_metadata`
 - Rows: 62490401
 - PostgreSQL: 42376.442ms = 42.376s
-- Drillbit: 
+- Drillbit: = 0.102s + 0.009s = 0.111s
